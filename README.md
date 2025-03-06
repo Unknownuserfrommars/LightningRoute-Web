@@ -1,7 +1,7 @@
 # LightningRoute-Web
 Lightning Route Web Version - FROM SCRATCH
 
-**Note that: THIS branch is made completely from scratch, and used some by ZhiDaoAI's code (See Attributions for more), so it uses GPL v3 LICENSE**
+**Note that: THIS branch DOES NOT uses ANY code from ZhiDaoAI (main branch used), so it will be using the MIT License**
 
 The brand-new mindmap making experience!
 
@@ -9,12 +9,7 @@ Uses AI to automatically summarize the text (text in the uploaded FILE/AUDIO/VID
 
 VERY User-friendly and is easy-to-use.
 
-## Attributions
-
-This project includes code derived from [ZhiDaoAI](https://github.com/ZigaoWang/ZhiDaoAI/), which is licensed under the **GNU General Public License v3 (GPL v3)** or later.  
-A copy of the GPL v3 license is included in the [LICENSE](LICENSE) file.
-This project is also licensed under the **GNU General Public License v3 (GPL v3)**.  
-For more details, please see the [LICENSE](LICENSE) file.
+Still working!
 
 ## Roadmap
 - Get that MVP working
