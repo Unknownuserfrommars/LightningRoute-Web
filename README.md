@@ -1,5 +1,7 @@
 # LightningRoute-Web
-Lightning Route Web Version
+Lightning Route Web Version - FROM SCRATCH
+
+**Note that: THIS branch is made completely from scratch, and used some by ZhiDaoAI's code (See Attributions for more), so it uses GPL v3 LICENSE**
 
 The brand-new mindmap making experience!
 
