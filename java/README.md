@@ -11,9 +11,11 @@ A Spring Boot application that generates interactive mind maps from text or docu
 - Multiple AI model support (GPT-3.5, GPT-4)
 - Responsive web interface
 
+**PLEASE NOTE THAT THE JAVA VERSION IS STILL IN EARLY DEVELOPMENT PERIOD, AND THE OPENAI API MIGHT NOT WORK DUE TO FIREWALL POLICIES?**
+
 ## Technology Stack
 
-- **Backend**: Java 17, Spring Boot 3
+- **Backend**: Java 21, Spring Boot 3
 - **Frontend**: HTML5, CSS3, JavaScript, D3.js
 - **API Integration**: OpenAI GPT API
 - **Build Tool**: Maven
@@ -31,16 +33,7 @@ A Spring Boot application that generates interactive mind maps from text or docu
 
 1. Clone the repository
 
-```bash
-git clone https://github.com/yourusername/mind-map-generator.git
-cd java_mindmap
-```
-
-2. Create a `.env` file in the root directory based on the example:
-
-```bash
-cp .env.example .env
-```
+2. Create a `.env` file in the root directory
 
 3. Edit the `.env` file with your OpenAI API key:
 
@@ -61,6 +54,8 @@ java -jar target/mindmap-generator-1.0.0.jar
 ```
 
 6. Visit `http://localhost:8080` in your web browser to use the application.
+
+**We are working on a domain currently**
 
 ## Usage
 
@@ -114,6 +109,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Acknowledgments
 
-- [OpenAI](https://openai.com/) for their powerful API
+- [OpenAI](https://openai.com/) for their powerful (but sometimes have connectivity problems) API
 - [D3.js](https://d3js.org/) for visualization
 - [Spring Boot](https://spring.io/projects/spring-boot) for the web framework
