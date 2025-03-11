@@ -1,3 +1,5 @@
+// --- File Processing Functions (unchanged) ---
+
 async function processFile(file) {
     const reader = new FileReader();
     
@@ -54,6 +56,7 @@ async function processImage(file) {
     return text;
 }
 
+// --- API Call Function (unchanged) ---
 async function callOpenAI(prompt) {
     const response = await fetch('/api/openai', {
         method: 'POST',
@@ -70,50 +73,106 @@ async function callOpenAI(prompt) {
     return await response.json();
 }
 
+// --- Radial Layout Calculation ---
+// This function mimics the Python recursive layout in utils.py
+function calculateRadialLayout(nodes, edges) {
+    // Create a mapping of node id to node
+    const nodeMap = {};
+    nodes.forEach(node => nodeMap[node.id] = node);
+
+    // Build an adjacency list: parent -> [child, ...]
+    const children = {};
+    edges.forEach(edge => {
+        if (!children[edge.from]) {
+            children[edge.from] = [];
+        }
+        children[edge.from].push(edge.to);
+    });
+    
+    const pos = {};
+    function assignPositions(nodeId, angleStart, angleEnd, level) {
+        const angle = (angleStart + angleEnd) / 2;
+        const radius = level * 100;  // Adjust scale as needed (100px per level)
+        pos[nodeId] = [radius * Math.cos(angle), radius * Math.sin(angle)];
+        
+        if (children[nodeId]) {
+            const nChildren = children[nodeId].length;
+            const angleStep = (angleEnd - angleStart) / nChildren;
+            for (let i = 0; i < nChildren; i++) {
+                assignPositions(children[nodeId][i], angleStart + i * angleStep, angleStart + (i + 1) * angleStep, level + 1);
+            }
+        }
+    }
+    // Assume the root node has id 'root'
+    assignPositions("root", 0, 2 * Math.PI, 1);
+    return pos;
+}
+
+// --- Mind Map Creation ---
+// This creates Plotly traces similar to the Python version (see utils.py)
 function createMindMap(graphData) {
     const nodes = graphData.nodes;
     const edges = graphData.edges;
     
-    // Calculate positions (similar to Python code)
     const pos = calculateRadialLayout(nodes, edges);
     
-    // Create Plotly traces
+    // Build edge traces for Plotly
     const edgeTraces = edges.map(edge => ({
         x: [pos[edge.from][0], pos[edge.to][0]],
         y: [pos[edge.from][1], pos[edge.to][1]],
         mode: 'lines',
-        line: {color: '#888', width: 1}
+        line: { color: '#888', width: 1 }
     }));
     
+    // Build node trace
     const nodeTrace = {
         x: nodes.map(node => pos[node.id][0]),
         y: nodes.map(node => pos[node.id][1]),
         mode: 'markers+text',
         text: nodes.map(node => node.label),
-        marker: {size: 12, color: '#ff7f0e'}
+        marker: { size: 12, color: '#ff7f0e' },
+        textposition: 'top center'
     };
     
     Plotly.newPlot('mindmap', [...edgeTraces, nodeTrace], {
         showlegend: false,
-        margin: {t: 0, b: 0}
+        margin: { t: 0, b: 0 }
     });
 }
 
-async function createDirectoryStructure(graphData) {
-    const dirHandle = await window.showDirectoryPicker();
-    const root = graphData.nodes.find(n => n.id === 'root');
+// --- Event Listener for Generating the Mind Map ---
+// This builds a prompt that mirrors your Python prompt (see app.py) and calls the API.
+document.getElementById("generateBtn").addEventListener("click", async function () {
+    const textInput = document.getElementById("textInput").value;
     
-    async function createNodes(parentHandle, nodeId) {
-        const children = graphData.edges
-            .filter(e => e.from === nodeId)
-            .map(e => graphData.nodes.find(n => n.id === e.to));
-        
-        for(const child of children) {
-            const childHandle = await parentHandle.getDirectoryHandle(child.label, {create: true});
-            await createNodes(childHandle, child.id);
-        }
+    if (!textInput) {
+        console.error("No text provided");
+        return;
     }
     
-    const rootHandle = await dirHandle.getDirectoryHandle(root.label, {create: true});
-    await createNodes(rootHandle, 'root');
+    const prompt = `Given the following text, create a mind map structure. Extract key concepts and their relationships.
+Format the response as a JSON with two arrays:
+1. "nodes": Each node has "id" (unique string) and "label" (displayed text)
+2. "edges": Each edge has "from" and "to" node IDs showing relationships.
+The root node should have id "root". Example format:
+{
+    "nodes": [{"id": "root", "label": "Main Topic"}, {"id": "1", "label": "Subtopic"}],
+    "edges": [{"from": "root", "to": "1"}]
 }
+
+Text to analyze:
+${textInput}`;
+    
+    try {
+        // Call your OpenAI API via the backend
+        const response = await callOpenAI(prompt);
+        
+        // The API is expected to return a JSON string with nodes and edges
+        const graphData = JSON.parse(response.trim());
+        
+        // Generate the mind map
+        createMindMap(graphData);
+    } catch (error) {
+        console.error("Error generating mind map:", error);
+    }
+});
