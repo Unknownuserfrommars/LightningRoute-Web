@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mind Map Generator</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>Mind Map Generator</h1>
+            <p>Generate interactive mind maps from text or documents</p>
+        </header>
+        
+        <main>
+            <div class="input-section">
+                <div class="tabs">
+                    <button id="text-tab" class="tab active">Text Input</button>
+                    <button id="file-tab" class="tab">File Upload</button>
+                </div>
+                
+                <div id="text-input" class="tab-content active">
+                    <textarea id="input-text" placeholder="Enter your text here..."></textarea>
+                    <button id="generate-btn" class="primary-btn">
+                        <i class="fas fa-brain"></i> Generate Mind Map
+                    </button>
+                </div>
+                
+                <div id="file-input" class="tab-content">
+                    <div class="file-drop-area" id="drop-area">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Drag & drop your file here or</p>
+                        <label for="file-input-field" class="file-input-label">Choose File</label>
+                        <input type="file" id="file-input-field" accept=".txt,.pdf,.docx,.png,.jpg,.jpeg" />
+                    </div>
+                    <div id="file-info" class="hidden">
+                        <p>Selected file: <span id="file-name"></span></p>
+                        <button id="upload-btn" class="primary-btn">
+                            <i class="fas fa-upload"></i> Upload & Generate
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="model-selector">
+                    <label for="model-select">AI Model:</label>
+                    <select id="model-select">
+                        <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                        <option value="gpt-4">GPT-4 (Premium)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="output-section">
+                <div id="loading" class="hidden">
+                    <div class="spinner"></div>
+                    <p>Generating mind map...</p>
+                </div>
+                
+                <div id="mind-map-container" class="hidden">
+                    <div class="mind-map-controls">
+                        <button id="zoom-in" class="icon-btn"><i class="fas fa-search-plus"></i></button>
+                        <button id="zoom-out" class="icon-btn"><i class="fas fa-search-minus"></i></button>
+                        <button id="reset-view" class="icon-btn"><i class="fas fa-compress-arrows-alt"></i></button>
+                        <button id="download-img" class="icon-btn"><i class="fas fa-download"></i></button>
+                    </div>
+                    
+                    <div id="mind-map"></div>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <p>&copy; 2025 Mind Map Generator | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+        </footer>
+    </div>
+    
+    <!-- Error Modal -->
+    <div id="error-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Error</h2>
+            <p id="error-message"></p>
+        </div>
+    </div>
+    
+    <!-- Libraries -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="/js/app.js"></script>
+</body>
+</html>
